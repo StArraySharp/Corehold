@@ -33,4 +33,4 @@ test_runtime.nupkg
 test_download.html
 Corehold/**/*.nupkg
 
-build.bat
+build.batbuild.bat
