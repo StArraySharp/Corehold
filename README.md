@@ -72,11 +72,7 @@ TargetApp/
 
 需要 Visual Studio 2022 Build Tools + CMake。
 
-```bat
-build.bat
-```
-
-产物在 `cmake-build-release-visual-studio/`：
+产物在CMake构建目录：
 
 - `winmm.dll` — 代理 DLL
 - `corehold_test.exe` — 测试可执行文件
