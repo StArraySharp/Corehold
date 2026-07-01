@@ -34,7 +34,7 @@ public static int Main(int argc, nint argv)
     "runtime_path": "Corehold/runtime/",
     "coreclr_path": "Corehold/runtime/coreclr.dll",
     "target_assembly_path": "Corehold/managed/Mod.dll",
-    "entry_point_method": "MyMod.Loader.Initialize",
+    "entry_point_method": "MyMod.Loader.Main",
     "entrypoint_string_args": ["arg1", "arg2"],
     "runtime_download_url": "https://globalcdn.nuget.org/packages/microsoft.netcore.app.runtime.win-x64.10.0.9.nupkg",
     "runtime_download_sha256": "b681046aef7cc0ffa9fec3ad865f033c7165300bd295c4a8902f24150a3fa414"
