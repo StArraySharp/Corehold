@@ -1,0 +1,36 @@
+# build outputs
+cmake-build-*/
+build/
+out/
+
+# IDE
+.idea/
+.vs/
+*.user
+*.suo
+
+# C++
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.dll
+*.exe
+
+# cache
+.clangd/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# runtime (downloaded, not source)
+Corehold/runtime/*
+
+# temporary
+Corehold/_runtime.nupkg
+test_runtime.nupkg
+test_download.html
+Corehold/**/*.nupkg
+
+build.bat
