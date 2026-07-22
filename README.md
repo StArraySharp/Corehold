@@ -7,10 +7,22 @@
 1. 将 `winmm.dll`（代理 DLL）和 `Corehold/` 文件夹放置到目标可执行文件同目录
 2. 目标进程加载 `winmm.dll` 时，代理 DLL 自动初始化
 3. 读取 `Corehold/corehold.json` 配置
-4. 若不存在则自动下载 .NET 运行时（NuGet 包 `.nupkg`）
-5. SHA256 校验完整性，`tar` 解压到 `runtime/`
-6. 加载 `coreclr.dll`，初始化 CoreCLR
-7. 通过 `coreclr_create_delegate` 调用托管程序集中的入口方法
+4. 根据进程是否已携 CoreCLR 选择两种模式：
+
+   **正常模式** — 进程无 CoreCLR：
+   
+   a. 若不存在则自动下载 .NET 运行时（NuGet 包 `.nupkg`）
+   b. SHA256 校验完整性，`tar` 解压到 `runtime/`
+   c. 加载 `coreclr.dll`，初始化 CoreCLR
+
+   **被动模式** — 进程已内置 CoreCLR（如 Unity IL2CPP）：
+   
+   a. 预加载进程目录下的 `coreclr.dll`
+   b. 挂钩 `coreclr_initialize`，在属性中追加自定义 DLL 路径到 `TRUSTED_PLATFORM_ASSEMBLIES`、`APP_PATHS`、`NATIVE_DLL_SEARCH_DIRECTORIES`
+   c. 等待宿主初始化完成，获取 `hostHandle`/`domainId`
+
+5. 通过 `coreclr_create_delegate` 调用托管程序集中的入口方法
+6. 通过 `coreclr_set_error_writer` 将 CoreCLR 错误输出重定向到控制台
 
 ## 入口方法签名
 
@@ -24,6 +36,12 @@ public static int Main(int argc, nint argv)
 - `argc` — 命令行参数个数（来自 `entrypoint_string_args`）
 - `argv` — 指向字符串指针数组的指针
 - 返回 `int`
+
+## 环境变量
+
+| 变量 | 说明 |
+|---|---|
+| `COREHOLD_TARGET_DIR` | 入口托管 DLL 所在目录。由 Corehold 在调用入口方法前设置，托管代码可通过 `Environment.GetEnvironmentVariable("COREHOLD_TARGET_DIR")` 获取。 |
 
 ## 配置
 
@@ -83,7 +101,7 @@ TargetApp/
 |---|---|---|
 | 目标运行时 | Mono | CoreCLR (.NET 10) |
 | 代理 DLL | `winhttp.dll` | `winmm.dll` |
-| 运行时获取 | 预装 | 自动下载 + SHA256 校验 |
+| 运行时获取 | 预装 | 自动下载 + SHA256 校验 / 复用宿主 CoreCLR |
 | 配置格式 | INI | JSON |
 | 平台 | 跨平台 | Windows x64 |
 

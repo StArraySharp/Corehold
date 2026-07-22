@@ -20,6 +20,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # ============================================================================
+# Dependencies: MinHook (API hooking library)
+# ============================================================================
+include(FetchContent)
+FetchContent_Declare(
+    minhook
+    GIT_REPOSITORY  https://github.com/TsudaKageyu/minhook.git
+    GIT_TAG         master
+)
+set(MINHOOK_BUILD_SHARED OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(minhook)
+
+# ============================================================================
 # Sources
 # ============================================================================
 set(SOURCES
@@ -34,6 +46,7 @@ set(SOURCES
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+    minhook
     winhttp
     crypt32
 )

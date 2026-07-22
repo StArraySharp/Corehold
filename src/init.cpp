@@ -19,10 +19,6 @@ static DWORD WINAPI InitThread(LPVOID) {
         FILE* dummy;
         freopen_s(&dummy, "CONOUT$", "w", stdout);
         setvbuf(stdout, nullptr, _IONBF, 0);
-        HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-        const char* msg = "NsHiJack \u5df2\u52a0\u8f7d\r\n";
-        DWORD written;
-        WriteConsoleA(hStdOut, msg, lstrlenA(msg), &written, nullptr);
     }
 
     load_coreclr_functions();
@@ -37,6 +33,7 @@ static DWORD WINAPI InitThread(LPVOID) {
 HANDLE g_hInitThread = nullptr;
 
 BOOL InitOnAttach(HMODULE hModule) {
+    try_passive_hook();
     g_hReadyEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
     g_hShutdownEvent = CreateEvent(nullptr, TRUE, FALSE, nullptr);
     g_hInitThread = CreateThread(nullptr, 0, InitThread, nullptr, 0, nullptr);
@@ -54,6 +51,7 @@ BOOL InitOnDetach() {
         g_hShutdownEvent = nullptr;
         g_hReadyEvent = nullptr;
     }
+    coreclr_passive_cleanup();
     if (g_config.console_enabled)
         FreeConsole();
     return TRUE;

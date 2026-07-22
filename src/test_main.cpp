@@ -30,7 +30,7 @@ int main() {
     std::cout << "Waiting for init thread..." << std::endl;
     Sleep(2000);  // 等 DllMain 中的 CreateThread 完成
 
-    auto _auxGetNumDevs     = (pfnAuxGetNumDevs)   GetProcAddress(hProxy, "auxGetNumDevs");
+    auto _auxGetNumDevs     = (pfnAuxGetNumDevs)    GetProcAddress(hProxy, "auxGetNumDevs");
     auto _joyGetNumDevs     = (pfnJoyGetNumDevs)    GetProcAddress(hProxy, "joyGetNumDevs");
     auto _waveOutGetNumDevs = (pfnWaveOutGetNumDevs)GetProcAddress(hProxy, "waveOutGetNumDevs");
     auto _midiOutGetNumDevs = (pfnMidiOutGetNumDevs)GetProcAddress(hProxy, "midiOutGetNumDevs");

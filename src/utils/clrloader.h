@@ -13,6 +13,8 @@ extern CoreholdConfig g_config;
 DLLEXPORT void load_coreclr_functions();
 DLLEXPORT __cdecl void load_json_config();
 void coreclr_shutdown();
+bool try_passive_hook();
+void coreclr_passive_cleanup();
 
 
 
